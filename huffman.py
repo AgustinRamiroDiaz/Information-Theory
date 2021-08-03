@@ -1,7 +1,8 @@
+#%%
 import heapq
 from dataclasses import dataclass
 
-
+#%%
 @dataclass
 class Node:
     value: type
@@ -39,7 +40,7 @@ class Node:
         return result_dictionary
 
 
-
+#%%
 def huffman_tree(value_frequency_dictionary: dict):
     priority_queue = [Node(value, frequency)
                       for value, frequency in value_frequency_dictionary.items()]
@@ -52,14 +53,35 @@ def huffman_tree(value_frequency_dictionary: dict):
 
     return priority_queue[0]
 
+#%%
+message = 'una frase para explorar la compresion optima'
 
-text = 'una frase para explorar la compresion optima'
-
-character_frequency = {character: text.count(
-    character) for character in set(text)}
+character_frequency = {character: message.count(
+    character) for character in set(message)}
 
 tree = huffman_tree(character_frequency)
 
-print(tree.to_dictionary())
+encode_dictionary = tree.to_dictionary()
+decode_dictionary = {value:key for key, value in encode_dictionary.items()}
+
+#%%
+def en_d_ecode(message, dictionary):
+    result = []
+    temporary = ''
+    for letter in message:
+        temporary += letter
+        if temporary in dictionary:
+            result.append(dictionary[temporary])
+            temporary = ''
+    
+    return ''.join(result)
+
+#%%
+encoded_message = en_d_ecode(message, encode_dictionary)
+decoded_message = en_d_ecode(encoded_message, decode_dictionary)
+
+assert(message == decoded_message)
+print(decoded_message)
+print(encoded_message)
 
 # TODO: add metrics like entropy to test implementation
